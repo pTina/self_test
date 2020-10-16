@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>드래그앤드랍</title>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery.ui.drag.js"></script>
+    <style>
+        *{box-sizing: border-box;}
+        .dragArea, .dropArea{
+            width: 400px; height: 150px; 
+            padding-top: 26px;
+            padding-left: 33px;
+            border: 1px solid #000;
+        }
+        .dragItem{
+            width: 100px;
+            height: 100px;
+            background-color: antiquewhite;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 100px;
+            margin-right: 10px;
+            float: left;
+            cursor: pointer;
+        }
+        
+        
+        .dropItem{
+            width: 102px; 
+            height: 102px; 
+            border-radius: 10px;
+            border: 2px solid darkseagreen;
+            float: left;
+            margin-right: 10px;
+        }
+        
+        .rebtn{
+            width: 100px; 
+            height: 50px;
+            background-color: deeppink;
+            text-align: center;
+            line-height: 50px;
+            color: #fff;
+            cursor: pointer;
+        }
+        
+        .dropObj{
+            border: 1px solid brown;
+            text-align: center;
+            line-height: 20px;
+            width: 20px;
+            height: 20px;
+            background-color: antiquewhite;
+
+        }
+        
+        .wrap:nth-of-type(2) .dropItem{
+            padding-left: 13px;
+        }
+        
+        .wrap:nth-of-type(2) .dropItem .dropObj{
+            border: 1px solid brown;
+            text-align: center;
+            line-height: 20px;
+            width: 20px;
+            height: 20px;
+            background-color: antiquewhite;
+
+        }
+        .wrap:nth-of-type(2) .dropItem .obj1{
+            position: relative;
+            top: 10px;
+            left: 10px;
+        }
+        
+        .wrap:nth-of-type(2) .dropItem .obj2{
+            position: relative;
+            top: 10px;
+            left: 20px;
+        }
+        
+        .wrap:nth-of-type(2) .dropItem .obj3{
+            position: relative;
+            top: 10px;
+            left: 30px;
+        }
+        
+        .wrap:nth-of-type(2) .dropItem .obj4{
+            position: relative;
+            top: 10px;
+            left: 40px;
+        }
+    </style>
+    
+    <script>
+        $(function(){
+            
+
+            // 드래그 할 수 있는 객체가 됨
+            $('.wrap .dragArea .dragItem').draggable({
+                cursor: 'pointer',
+                helper: 'clone',
+                revert: 'false',
+                
+                start: function(e, obj){
+                    // 변수 isRec <= 드래그된 item으로 지정
+                    isRec=$(this);
+                },
+                stop: function(e, obj){
+                    
+                }
+            });
+            
+            
+            // 1. 같은 위치에 있는 요소만 드래그 드랍 가능
+            // 드롭 가능한 곳
+            $('.wrap:nth-of-type(1) .dropArea .dropItem').droppable({
+                // 드롭 가능한 객체
+                accept:$('.wrap:nth-of-type(1) .dragArea .dragItem'),
+                
+                // 드롭됐을 때
+                drop: function(e,obj){            
+                    // 같은 위치에 있는 것만 드롭됨
+                    if(isRec.index() == $(this).index()){
+                        $(this).addClass('dragItem');
+                        $(this).html(isRec.text());
+                        isRec.draggable({revert:false});
+                    }else{
+                        // 같은 위치가 아닌 것은 제자리도 돌아감
+                        isRec.draggable({revert:true});
+                    }
+                }
+            })
+            
+            
+            // 2. 드래그 아이템 규칙적으로 쌓이기(최대 4개까지만)
+            var count = 0;
+            var i=0;
+            
+            $('.wrap:nth-of-type(2) .dropArea .dropItem').droppable({
+                
+                accept:$('.wrap:nth-of-type(2) .dragArea .dragItem'),
+                drop: function(e,obj){
+                    var idx = $(this).index();
+                    
+                    console.log(idx);
+                    
+                    if(idx == 0){   // 1번 드롭영역
+                        if(count<=4){
+                            $(this).find('.dropObj').eq(count).show();
+                            $(this).find('.dropObj').eq(count).html(isRec.text());
+                            count += 1;
+                            isRec.draggable({revert: false});
+                        }else{
+                            isRec.draggable({revert: true});
+                        }
+                    
+                    }else if(idx == 1){ //2번 드롭구역
+                        i += 1;
+                        if(i<=4){
+                            $(this).append('<div class="dropObj"></div>');
+                            $(this).find('.dropObj').eq(i-1).addClass('obj'+i);
+                            isRec.draggable({revert: false});
+                        }else{
+                            isRec.draggable({revert: true});
+                        }
+                    }
+                   
+                }
+            })
+            
+            // 1번 다시하기
+            $('.wrap:nth-of-type(1) .rebtn').click(function(){
+                var dragItem = $(this).parent().find('.dropArea .dropItem');
+                dragItem.removeClass('dragItem');
+                dragItem.html('');
+            })
+            
+            //2번 다시하기
+            $('.wrap:nth-of-type(2) .rebtn').click(function(){
+                var dropItem = $(this).parent().find('.dropArea .dropItem');
+                count = 0;
+                i = 0;
+                
+                //1번 드롭영역
+                dropItem.eq(0).find('.dropObj').hide();
+                dropItem.eq(0).find('.dropObj').html('');
+                
+                //2번 드롭영역
+                dropItem.eq(1).find('.dropObj').remove();
+                
+            })
+            
+            
+        })
+        
+        $(window).on('load',function(){
+            $('.dropObj').hide();
+            
+            
+        })
+    </script>
+</head>
+<body>
+    <p>Drag &amp; Drop</p>
+    <p>1. 같은 위치에 있는 요소만 드래그 드랍 가능</p>
+    <div class="wrap">
+        <div class="dragArea">
+            <div class="dragItem">1</div>
+            <div class="dragItem">2</div>
+            <div class="dragItem">3</div>
+        </div>
+        
+        <div class="dropArea">
+            <div class="dropItem"></div>
+            <div class="dropItem"></div>
+            <div class="dropItem"></div>
+        </div>
+        <div class="rebtn">다시하기</div>
+    </div>
+    
+    <p>2. 드래그 아이템 규칙적으로 쌓이기<br>(1번구역은 html로 구조 미리 생성, 2번구역은 드롭 되면 생성되도록 구현, 3번구역 미설정 및 미완성</p>
+    <div class="wrap">
+        <div class="dragArea">
+            <div class="dragItem">1</div>
+            <div class="dragItem">2</div>
+            <div class="dragItem">3</div>
+        </div>
+        
+        <div class="dropArea">
+            <div class="dropItem">
+                <div class="dropObj obj1"></div>
+                <div class="dropObj obj2"></div>
+                <div class="dropObj obj3"></div>
+                <div class="dropObj obj4"></div>
+            </div>
+            <div class="dropItem"></div>
+            <div class="dropItem"></div>
+        </div>
+        <div class="rebtn">다시하기</div>
+    </div>
+    
+</body>
+</html>

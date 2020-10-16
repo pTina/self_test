@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>random</title>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        var easy_page = ['clickPage1','clickPage2','clickPage3'];
+        var normal_page = ['clickPage4','clickPage5','clickPage6'];
+        var hard_page = ['clickPage7','clickPage8','clickPage9'];
+        
+        $(window).on('load',function(){
+            var ar = shuffleRandom(3);
+            console.log(make_quiz(easy_page, ar, 2));
+            
+            check_page();
+            
+            var testArray = ["aaa", "bbb", "ccc", "ddd"];
+
+            //배열의 중에서 "bbb"가 있으면 true를 리턴
+            //메서드 수행 중 true가 리턴되면 메서드 수행을 중단하고 true를 리턴
+            testArray.some(function (item, index, array) {
+//                console.log(index + "번째 요소 : " + item);
+//                console.log(!!~item.search("bbb"));
+//                return !!~item.search("bbb");
+                if(!!~item.search("bbb")){
+                    
+                }
+            });
+            
+            var selector = '.pain';
+            var html = '<div></div>';
+            $(selector).append(html);
+
+            
+        })
+        
+        
+        function shuffleRandom(n){
+            var ar = new Array();
+            var temp;
+            var rnum;
+
+            for(var i=1; i<=n; i++){
+                ar.push(i);
+            }
+
+            for(var i=0; i< ar.length ; i++)
+            {
+                rnum = Math.floor(Math.random() *n);
+                temp = ar[i];
+                ar[i] = ar[rnum];
+                ar[rnum] = temp;
+            }
+
+                return ar;
+        }
+        
+        function make_quiz(diff_array, ar, n){
+            var array = [];
+            
+            for(var i = 0; i<n; i++){
+                array.push(diff_array[ar[i]-1]);
+            }
+            
+            return array;
+        }
+        
+        function check_page(){
+            easy_page.some(function(item,index){
+                if(item == "clickPage1"){
+                    console.log('yes'+index);
+                    
+                }else{
+                    console.log('no');
+                }
+            })
+        }
+
+    </script>
+</head>
+<body>
+    <p></p>
+    <div class="pain"></div>
+</body>
+</html>
