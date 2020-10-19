@@ -96,6 +96,8 @@
     <script>
         $(function(){
             
+            var top = $('.wrap:nth-of-type(2) .dropArea .dropItem:nth-of-type(3)').offset().top;
+            var right = $('.wrap:nth-of-type(2) .dropArea .dropItem:nth-of-type(3)').offset().right;
 
             // 드래그 할 수 있는 객체가 됨
             $('.wrap .dragArea .dragItem').draggable({
@@ -111,6 +113,7 @@
                     
                 }
             });
+           
             
             
             // 1. 같은 위치에 있는 요소만 드래그 드랍 가능
@@ -137,17 +140,18 @@
             // 2. 드래그 아이템 규칙적으로 쌓이기(최대 4개까지만)
             var count = 0;
             var i=0;
-            
+            var a = 0;
+            var sum = 0;
+            var dropObj = '<div class="dropObj"></div>';
             $('.wrap:nth-of-type(2) .dropArea .dropItem').droppable({
                 
                 accept:$('.wrap:nth-of-type(2) .dragArea .dragItem'),
                 drop: function(e,obj){
                     var idx = $(this).index();
                     
-                    console.log(idx);
                     
                     if(idx == 0){   // 1번 드롭영역
-                        if(count<=4){
+                        if(count<4){
                             $(this).find('.dropObj').eq(count).show();
                             $(this).find('.dropObj').eq(count).html(isRec.text());
                             count += 1;
@@ -160,11 +164,30 @@
                         i += 1;
                         if(i<=4){
                             $(this).append('<div class="dropObj"></div>');
+                            
                             $(this).find('.dropObj').eq(i-1).addClass('obj'+i);
                             isRec.draggable({revert: false});
                         }else{
                             isRec.draggable({revert: true});
                         }
+                        
+                    }else if(idx == 2){ // 3번 드롭구역
+                        a += 1;
+                        if(a<=4){
+                            $(this).append('<div class="dropObj"></div>');
+                            $(this).find('.dropObj').eq(a-1).addClass('obj'+a);
+                            isRec.draggable({revert: false});
+                        }else{
+                            isRec.draggable({revert: true});
+                        }
+                        
+                        // 3번 드롭구역의 dropObj 드래그 가능하도록 동적으로 생성된 요소에 이벤트 바인딩
+                        $('.wrap:nth-of-type(2) .dropArea .dropItem:nth-of-type(3) .dropObj').draggable({
+                            cursor: 'pointer',
+                            containment : 'parent' // 드래그 영역을 부모로 제한함
+
+                        });
+
                     }
                    
                 }
@@ -190,16 +213,18 @@
                 //2번 드롭영역
                 dropItem.eq(1).find('.dropObj').remove();
                 
+                //3번 드롭영역
+                dropItem.eq(2).find('.dropObj').remove();
+                
             })
-            
             
         })
         
         $(window).on('load',function(){
             $('.dropObj').hide();
-            
-            
+
         })
+        
     </script>
 </head>
 <body>
@@ -220,7 +245,7 @@
         <div class="rebtn">다시하기</div>
     </div>
     
-    <p>2. 드래그 아이템 규칙적으로 쌓이기<br>(1번구역은 html로 구조 미리 생성, 2번구역은 드롭 되면 생성되도록 구현, 3번구역 미설정 및 미완성</p>
+    <p>2. 드래그 아이템 규칙적으로 쌓이기<br>(1번구역은 html로 구조 미리 생성, 2번구역은 드롭 되면 생성되도록 구현, 3번구역 드롭된 개체 드래그가능</p>
     <div class="wrap">
         <div class="dragArea">
             <div class="dragItem">1</div>
