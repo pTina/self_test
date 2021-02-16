@@ -1,0 +1,67 @@
+*{
+    box-sizing: border-box;
+}
+
+.objWrap{
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    width: 320px;
+    height: 320px;
+    
+/*    background-color: rgba(0,0,0,0.3);*/
+}
+
+.objWrap:nth-of-type(1) .obj{
+    width: 46px;
+    height: 46px;
+    border: 1px dotted #00adee;
+    pointer-events: none;
+    margin-right: -1px;
+    margin-bottom: -1px;
+}
+
+.obj{
+    position: relative;
+    width: 50px;
+    height: 50px;
+    
+    float: left;
+    margin-right: -5px;
+    margin-bottom: -5px;
+    
+    cursor: pointer;
+}
+
+.obj.on{
+    border: 5px solid #ec008c;
+}
+
+
+
+
+.rebtn{
+    width: 134px;
+    height: 36px;
+    position: absolute;
+    cursor: pointer;
+    border-radius: 50px;
+    top: 200px;
+    left: 500px;
+    
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    line-height: 36px;
+    
+    background-color: #99c352;
+    
+}
+
+p{
+    color: red;
+    position: absolute;
+    top: 418px;
+    left: 100px;
+    font-weight: bold;
+}
